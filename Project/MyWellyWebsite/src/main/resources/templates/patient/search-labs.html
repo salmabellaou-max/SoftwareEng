@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Laboratories - MyWelly</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="logo">
+                <img th:src="@{/images/logo.jpg}" alt="MyWelly Logo" class="logo-img">
+            </a>
+            <ul class="nav-links">
+                <li><a th:href="@{/patient/dashboard}">Dashboard</a></li>
+                <li><a th:href="@{/patient/search}">Find Doctors</a></li>
+                <li><a th:href="@{/patient/search-labs}">Find Laboratories</a></li>
+                <li><a th:href="@{/patient/profile}">Profile</a></li>
+                <li>
+                    <form th:action="@{/logout}" method="post" style="display: inline;">
+                        <button type="submit" style="background: none; border: none; color: white; cursor: pointer; font-size: inherit; font-weight: 500;">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1 style="color: var(--primary-green); margin-bottom: 2rem;">Find Laboratories</h1>
+
+            <!-- Search Form -->
+            <div class="search-section">
+                <form th:action="@{/patient/search-labs}" method="get">
+                    <div class="filters">
+                        <div class="form-group">
+                            <label>City</label>
+                            <select name="location" class="form-control" onchange="this.form.submit()">
+                                <option value="">All Cities</option>
+                                <option th:each="loc : ${locations}"
+                                        th:value="${loc}"
+                                        th:text="${loc}"
+                                        th:selected="${loc == selectedLocation}">Location</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="align-self: flex-end;">
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">Filter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Results -->
+            <h2 style="color: var(--primary-green); margin: 2rem 0 1rem;">
+                <span th:text="${laboratories.size()}">0</span> Laboratories Found
+            </h2>
+
+            <div class="doctor-grid">
+                <div class="doctor-card" th:each="lab : ${laboratories}">
+                    <div class="doctor-info">
+                        <h3 th:text="${lab.labName}">Lab Name</h3>
+                        <div class="doctor-location"><span th:text="${lab.location}">Location</span></div>
+
+                        <div class="doctor-rating">
+                            <span class="rating-value" th:text="${#numbers.formatDecimal(lab.averageRating, 1, 1)}">4.5</span>
+                            <span class="rating-text">(<span th:text="${lab.totalReviews}">10</span> reviews)</span>
+                        </div>
+
+                        <div style="margin-top: 1rem;">
+                            <strong>Working Hours:</strong> <span th:text="${lab.workingHours}">9:00-17:00</span>
+                        </div>
+
+                        <div style="margin-top: 1rem;">
+                            <strong>Phone:</strong> <span th:text="${lab.phoneNumber}">+212...</span>
+                        </div>
+
+                        <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                            <a th:href="@{/patient/laboratory/{id}(id=${lab.id})}" class="btn btn-outline" style="flex: 1;">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 MyWelly - Transforming Healthcare in Morocco. All rights reserved.</p>
+    </footer>
+</body>
+</html>
